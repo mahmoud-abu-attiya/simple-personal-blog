@@ -6,15 +6,30 @@
 button{
   @apply cursor-pointer
 }
-body{
-  background-color: #a79277;
-background-image: radial-gradient(at 1% 16%, #a79277 0%, transparent 60%), radial-gradient(at 13% 54%, #d1bb9e 0%, transparent 50%), radial-gradient(at 41% 89%, #ead8c0 0%, transparent 40%), radial-gradient(at 79% 30%, #fff2e1 0%, transparent 30%);
-}
 /* max-sm	@media (width < 40rem) { ... }
 max-md	@media (width < 48rem) { ... }
 max-lg	@media (width < 64rem) { ... }
 max-xl	@media (width < 80rem) { ... }
 max-2xl */
+
+.editor-container h1{
+  @apply text-3xl font-bold
+}
+.editor-container h2{
+  @apply text-2xl font-bold
+}
+.editor-container h3{
+  @apply text-xl font-bold
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
 /* app/globals.css */
 .layout-toggle {
   margin-bottom: 20px;

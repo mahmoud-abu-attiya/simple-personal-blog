@@ -10,11 +10,11 @@ export default function ArticlesPage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const [layout, setLayout] = useState<'infinite' | 'masonry'>('infinite');
+  // const [layout, setLayout] = useState<'infinite' | 'masonry'>('infinite');
 
   const fetchArticles = async () => {
     const apiKey = process.env.NEXT_PUBLIC_NEWSAPI_KEY;
-    const url = `https://newsapi.org/v2/everything?q=keyword&apiKey=${apiKey}&page=${page}&pageSize=10`;
+    const url = `https://newsapi.org/v2/everything?q=frontend&apiKey=${apiKey}&page=${page}&pageSize=10`;
 
     try {
       const response = await fetch(url);
@@ -24,13 +24,13 @@ export default function ArticlesPage() {
       }
       const data = await response.json();
       // setInterval(() => {
-      
-        const newArticles: Article[] = data.articles || [];
-        setArticles((prev) => [...prev, ...newArticles]);
-        setPage(page + 1);
-        if (newArticles.length === 0) {
-          setHasMore(false);
-        }
+
+      const newArticles: Article[] = data.articles || [];
+      setArticles((prev) => [...prev, ...newArticles]);
+      setPage(page + 1);
+      if (newArticles.length === 0) {
+        setHasMore(false);
+      }
       // }, 50000);
     } catch (error) {
       console.error('Error fetching articles:', error);
@@ -43,25 +43,21 @@ export default function ArticlesPage() {
   }, []);
 
   const renderArticle = (article: Article) => (
-    <div key={article.url} className="rounded-lg overflow-hidden shadow flex flex-col">
-      <div className='relative'>
-        <div className="absolute w-full h-full left-0 top-0 bg-gradient-to-t from-[#06b6d4] via-transparent to-transparent" ></div>
+    <div key={article.url} className="rounded-lg overflow-hidden shadow flex flex-col gap-4 p-4 bg-slate-300/50 backdrop-blur-md">
+
       {article.urlToImage && article.urlToImage.startsWith("http") ? (
-        <Image src={article.urlToImage} alt={article.title} className="article-image" width={300} height={150} />
+        <Image src={article.urlToImage} alt={article.title} className="article-image rounded shadow" width={300} height={150} />
       ) : (
-        <Image src={"https://placehold.co/300x150/png"} alt={article.title} className="article-image" width={300} height={150} />
+        <Image src={"https://placehold.co/300x150/png"} alt={article.title} className="article-image rounded shadow" width={300} height={150} />
       )}
-      </div>
-      <div className="p-4 grow bg-gradient-to-b from-[#06b6d4] via-[#2563eb] to-[#6366f1]">
-      <h2 className='text-xl font-bold'>{article.title}</h2>
-      <p className='font-light'>{(layout === "masonry" ? article.description : article.description?.slice(0, 100) + '...') || 'No description available'}</p>
-      <p>
-        <small>Published: {new Date(article.publishedAt).toLocaleDateString()}</small>
-      </p>
-      <a href={article.url} target="_blank" rel="noopener noreferrer">
-        Read More
-      </a>
-      </div>
+        <h2 className='text-xl font-bold'>{article.title}</h2>
+        <p className='font-light'>{article.description || 'No description available'}</p>
+        <p>
+          <small>Published: {new Date(article.publishedAt).toLocaleDateString()}</small>
+        </p>
+        <a href={article.url} target="_blank" rel="noopener noreferrer">
+          Read More
+        </a>
     </div>
   );
 
@@ -84,25 +80,7 @@ export default function ArticlesPage() {
 
   return (
     <main className="container pt-18">
-
-      <h1>Latest Articles</h1>
-      <div className="layout-toggle">
-        <button onClick={() => setLayout('infinite')}>Infinite Scroll</button>
-        <button onClick={() => setLayout('masonry')}>Masonry Grid</button>
-      </div>
-      {layout === 'infinite' ? (
-        <InfiniteScroll
-          dataLength={articles.length}
-          next={fetchArticles}
-          hasMore={hasMore}
-          loader={<Loading />}
-          endMessage={<p className='text-xl my-6 text-center'>No more articles to load.</p>}
-        >
-          <div className="article-list">
-            {articles.map((article) => renderArticle(article))}
-          </div>
-        </InfiniteScroll>
-      ) : (
+      <h1 className='text-3xl my-8'>For you</h1>
         <InfiniteScroll
           dataLength={articles.length}
           next={fetchArticles}
@@ -118,7 +96,6 @@ export default function ArticlesPage() {
             {articles.map((article) => renderArticle(article))}
           </Masonry>
         </InfiniteScroll>
-      )}
     </main>
   );
 }
