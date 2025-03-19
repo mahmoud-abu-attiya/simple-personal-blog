@@ -16,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <div className="head-gradient w-screen h-screen fixed top-0 left-0"></div>
         <Navbar />
         {children}
         <Footer />

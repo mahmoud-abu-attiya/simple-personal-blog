@@ -21,6 +21,51 @@ max-2xl */
 .editor-container h3{
   @apply text-xl font-bold
 }
+.text-gradient{
+  @apply bg-gradient-to-tl from-sky-900 via-sky-700 to-sky-400 bg-clip-text text-transparent font-extrabold
+}
+@layer utilities {
+  .animated-gradient-text {
+    @apply bg-clip-text text-transparent font-extrabold drop-shadow;
+    background-image: linear-gradient(
+      90deg,
+      #0369a1,
+      #38bdf8,
+      #0369a1
+    );
+    background-size: 200% 200%;
+    position: relative;
+    animation: gradientLoop 2s linear 10s infinite;
+  }
+
+  @keyframes gradientLoop {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+  }
+}
+
+.head-gradient {
+  background: radial-gradient(at 100% 100%, #4a90e2 0px, transparent 50%), #fff;
+    z-index: -1;
+}
+
+.article-content :where(h1, h2, h3, h4, h5, h6) {
+  font-size: revert;
+  font-weight: revert;
+}
+
+.line-after{
+  position: relative;
+}
+.line-after::after{
+  @apply bg-blue-900;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  top: 100%;
+  left: 0;
+}
 
 .tiptap p.is-editor-empty:first-child::before {
   color: #adb5bd;

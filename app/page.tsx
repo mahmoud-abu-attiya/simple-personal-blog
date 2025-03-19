@@ -5,12 +5,12 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Masonry from 'react-masonry-css';
 import { Article } from '../types/newsApi';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  // const [layout, setLayout] = useState<'infinite' | 'masonry'>('infinite');
 
   const fetchArticles = async () => {
     const apiKey = process.env.NEXT_PUBLIC_NEWSAPI_KEY;
@@ -23,7 +23,6 @@ export default function ArticlesPage() {
         throw new Error('Failed to fetch articles');
       }
       const data = await response.json();
-      // setInterval(() => {
 
       const newArticles: Article[] = data.articles || [];
       setArticles((prev) => [...prev, ...newArticles]);
@@ -31,7 +30,6 @@ export default function ArticlesPage() {
       if (newArticles.length === 0) {
         setHasMore(false);
       }
-      // }, 50000);
     } catch (error) {
       console.error('Error fetching articles:', error);
       setHasMore(false);
@@ -42,22 +40,22 @@ export default function ArticlesPage() {
     fetchArticles(); // Initial fetch
   }, []);
 
-  const renderArticle = (article: Article) => (
-    <div key={article.url} className="rounded-lg overflow-hidden shadow flex flex-col gap-4 p-4 bg-slate-300/50 backdrop-blur-md">
+  const renderArticle = (article: Article, index: number) => (
+    <div key={index} className="rounded-xl overflow-hidden shadow-lg border border-blue-300 flex flex-col gap-4 p-4 bg-gradient-to-br from-sky-100 via-sky-200 to-blue-300 backdrop-blur-md">
 
       {article.urlToImage && article.urlToImage.startsWith("http") ? (
-        <Image src={article.urlToImage} alt={article.title} className="article-image rounded shadow" width={300} height={150} />
+        <Image src={article.urlToImage} alt={article.title} className="article-image rounded-xl shadow" width={300} height={150} />
       ) : (
-        <Image src={"https://placehold.co/300x150/png"} alt={article.title} className="article-image rounded shadow" width={300} height={150} />
+        <Image src={"https://placehold.co/300x150/png"} alt={article.title} className="article-image rounded-xl shadow" width={300} height={150} />
       )}
-        <h2 className='text-xl font-bold'>{article.title}</h2>
+        <h2 className='text-xl font-bold text-sky-900'>{article.title}</h2>
         <p className='font-light'>{article.description || 'No description available'}</p>
         <p>
           <small>Published: {new Date(article.publishedAt).toLocaleDateString()}</small>
         </p>
-        <a href={article.url} target="_blank" rel="noopener noreferrer">
+        <Link href={article.url} target="_blank" rel="noopener noreferrer" className='text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center'>
           Read More
-        </a>
+        </Link>
     </div>
   );
 
@@ -80,7 +78,10 @@ export default function ArticlesPage() {
 
   return (
     <main className="container pt-18">
-      <h1 className='text-3xl my-8'>For you</h1>
+      <div className="my-8 md:my-16 max-w-2xl text-center mx-auto">
+      <h1 className='text-4xl md:text-6xl animated-gradient-text uppercase mb-4'>Dive Into a World of Knowledge</h1>
+      <p className="text-sky-900 text-xl">Explore insightful articles on topics that matter. Read, learn, and stay inspired—one article at a time.</p>
+      </div>
         <InfiniteScroll
           dataLength={articles.length}
           next={fetchArticles}
@@ -93,7 +94,7 @@ export default function ArticlesPage() {
             className="my-masonry-grid"
             columnClassName="my-masonry-grid_column"
           >
-            {articles.map((article) => renderArticle(article))}
+            {articles.map((article, i) => renderArticle(article, i))}
           </Masonry>
         </InfiniteScroll>
     </main>

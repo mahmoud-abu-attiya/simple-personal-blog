@@ -18,3 +18,12 @@ export interface NewsApiResponse {
   totalResults: number;
   articles: Article[];
 }
+
+export interface LocalArticle {
+    id: string;
+    title: string;
+    description: string;
+    createdAt: string;
+    image: string;
+    content: string;
+}

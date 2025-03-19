@@ -4,22 +4,22 @@ import { useState, useEffect } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import Image from "@tiptap/extension-image";
+import Image from 'next/image'
 import Swal from 'sweetalert2';
 import { useModalStore } from "@/store/modalStore";
 import { useArticleStore } from '@/store/articleStore';
 
 export default function CreateArticle() {
-   const [image, setImage] = useState<string | null>(null);
+   const [image, setImage] = useState<string>('');
    const [title, setTitle] = useState<string>('');
    const [description, setDescription] = useState<string>('');
-   // const [content, setContent] = useState<string>('');
 
    const { selectedArticleId, closePostModal } = useModalStore();
    const { addArticle, updateArticle, getArticle } = useArticleStore();
 
 
    const editor = useEditor({
+      immediatelyRender: false, // to avoid hydration mismatches
       extensions: [
          Placeholder.configure({
             placeholder: "Start writing your article here...",
@@ -29,9 +29,7 @@ export default function CreateArticle() {
                levels: [1, 2, 3], // Enable H1, H2, H3
             },
          }),
-         Image,
       ],
-      // content: content || null,
       editorProps: {
          attributes: {
             class: "prose lg:prose-lg focus:outline-none min-h-[300px] max-h-[400px] bg-gray-50",
@@ -42,7 +40,7 @@ export default function CreateArticle() {
    const resetData = () => {
       setTitle("")
       setDescription("")
-      setImage(null)
+      setImage("")
       editor?.commands.clearContent();
    }
 
@@ -53,7 +51,6 @@ export default function CreateArticle() {
             setTitle(article.title)
             setDescription(article.description)
             setImage(article.image)
-            // setContent(article.content)
             if (editor) {
                editor.commands.setContent(article.content); // Update the editor's content dynamically
             }
@@ -78,20 +75,26 @@ export default function CreateArticle() {
       if (!editor) return;
 
       const newArticle = {
-         id: crypto.randomUUID(), // Random ID
+         id: crypto.randomUUID().toString(), // Random ID
          title,
          description,
-         content: editor.getHTML(),
+         content: editor.getHTML().toString(),
          image,
          createdAt: new Date().toISOString(),
       };
+      // Edit existing article
       if (selectedArticleId) {
-         // Edit existing article
          updateArticle(selectedArticleId, {
             ...newArticle,
-            createdAt: getArticle(selectedArticleId)?.createdAt, // Preserve original creation date
-            // content
+            createdAt: getArticle(selectedArticleId)?.createdAt,
          });
+         closePostModal();
+         Swal.fire({
+            title: 'Done!',
+            text: 'Article edit successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+         })
       } else {
          addArticle(newArticle);
          closePostModal();
@@ -99,9 +102,8 @@ export default function CreateArticle() {
             title: 'Done!',
             text: 'Article saved successfully!',
             icon: 'success',
-            confirmButtonText: 'Cool'
+            confirmButtonText: 'OK'
          })
-         console.log(newArticle)
       }
 
       resetData();
@@ -138,7 +140,7 @@ export default function CreateArticle() {
          <div className="flex items-center justify-center w-full bg-gray-50 rounded-lg my-4">
             {image ? (
                <div className="flex flex-col">
-                  <img src={image} alt="Preview" className="w-full mb-2 rounded-lg" />
+                  <Image src={image} width={400} height={350} alt="Preview" className="w-full mb-2 rounded-lg max-h-80" />
                   <input
                      className="block w-full p-4 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none"
                      id="dropzone-file"
@@ -165,7 +167,7 @@ export default function CreateArticle() {
          <div className="border border-gray-300 rounded-lg overflow-hidden">
             {/* Toolbar for Tiptap */}
             {editor && (
-               <div className="flex rounded bg-gray-100 p-2 gap-2">
+               <div className="flex rounded bg-gray-100 p-2 gap-2 text-sm">
                   <select
                      onChange={handleHeadingChange}
                      className="px-1 py-0.5 rounded bg-white"
@@ -203,11 +205,18 @@ export default function CreateArticle() {
             </div>
          </div>
 
+         <div className="flex">
          <button
             onClick={saveArticle}
-            className="bg-blue-500 text-white px-4 py-2 rounded mt-4">
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4">
             {selectedArticleId ? 'Update' : 'Create'} Post
          </button>
+         <button
+            onClick={() => closePostModal()}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg mt-4">
+            Cansel
+         </button>
+         </div>
       </div>
    );
 }
