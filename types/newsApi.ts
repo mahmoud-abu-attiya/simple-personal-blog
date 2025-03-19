@@ -27,3 +27,16 @@ export interface LocalArticle {
     image: string;
     content: string;
 }
+
+export interface NewArticle  {
+  author: string | null,
+  title: string,
+  description: string,
+  url: string,
+  source: string,
+  image: string | null,
+  category: string | null,
+  language: string,
+  country: string,
+  published_at: string
+}
