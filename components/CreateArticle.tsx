@@ -205,15 +205,15 @@ export default function CreateArticle() {
             </div>
          </div>
 
-         <div className="flex">
+         <div className="flex mt-4 gap-4">
          <button
             onClick={saveArticle}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4">
+            className="flex items-center gap-2 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
             {selectedArticleId ? 'Update' : 'Create'} Post
          </button>
          <button
             onClick={() => closePostModal()}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg mt-4">
+            className="flex gap-2 items-center justify-center text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
             Cansel
          </button>
          </div>
