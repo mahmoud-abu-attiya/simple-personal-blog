@@ -72,7 +72,7 @@ export default function ArticlesPage() {
   };
 
   return (
-    <main className="container pt-18">
+    <main className="container pt-18 min-h-screen">
       <div className="my-8 md:my-16 max-w-2xl text-center mx-auto">
         <h1 className='text-4xl md:text-6xl animated-gradient-text uppercase mb-4'>Dive Into a World of Knowledge</h1>
         <p className="text-sky-900 text-xl">Explore insightful articles on topics that matter. Read, learn, and stay inspired—one article at a time.</p>

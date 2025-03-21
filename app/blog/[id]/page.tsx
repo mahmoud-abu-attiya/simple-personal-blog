@@ -88,7 +88,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
          </div>
          <div className="hidden lg:block col-span-1">
-            <div className="flex gap-2 mt-auto">
+            <div className="flex gap-2">
                <button className="flex gap-2 items-center justify-center text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center grow" onClick={handleDelete(article.id, 'blog')}>Delete <FaTrashCan /></button>
                <button className="flex gap-2 items-center justify-center text-white bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-3 py-2 text-center grow" onClick={() => openPostModal(article.id)}>Edit <FaRegPenToSquare /></button>
             </div>
